@@ -2,7 +2,7 @@
 
 박진수의 경력과 프로젝트를 소개하는 정적 포트폴리오 사이트입니다.
 
-**공개 사이트:** https://1jsjs.github.io/parkjinsu-portfolio-pages/
+**공개 사이트:** https://parkjinsu.com/
 
 `main` 브랜치에 변경 사항을 올리면 GitHub Actions가 정적 사이트를 `dist/`에 빌드하고 GitHub Pages에 배포합니다. Vercel은 이 저장소의 배포 경로에 포함되지 않습니다.
 
