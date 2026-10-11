@@ -1,4 +1,39 @@
 const I = (ko, en) => ({ ko, en });
+// Add your own Channel Talk web plugin key to enable the PJ chat launcher.
+const CHANNEL_TALK_PLUGIN_KEY = '';
+const CONTACT_EMAIL = 'jinsu.build@gmail.com';
+let channelTalkReady = false;
+let channelTalkPending = null;
+
+function showChannelTalk() {
+  if (channelTalkReady) {
+    window.ChannelIO('showMessenger');
+    return Promise.resolve();
+  }
+  if (!channelTalkPending) {
+    channelTalkPending = new Promise((resolve, reject) => {
+      const boot = () => {
+        if (typeof window.ChannelIO !== 'function') return reject(new Error('Channel Talk did not load'));
+        window.ChannelIO('boot', {
+          pluginKey: CHANNEL_TALK_PLUGIN_KEY,
+          language: getLang(),
+          hideChannelButtonOnBoot: true
+        }, error => error ? reject(error) : resolve());
+      };
+      if (typeof window.ChannelIO === 'function') return boot();
+      const script = document.createElement('script');
+      script.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      script.async = true;
+      script.onload = boot;
+      script.onerror = () => reject(new Error('Channel Talk script failed to load'));
+      document.head.append(script);
+    }).then(() => { channelTalkReady = true; }).catch(error => {
+      channelTalkPending = null;
+      throw error;
+    });
+  }
+  return channelTalkPending.then(() => window.ChannelIO('showMessenger'));
+}
 const projectData = [
   {
     id: 'sobi', year: '2026.08', title: I('소비 재판소', 'Sobi Tribunal'),
@@ -91,7 +126,7 @@ const sectionHead = (title, link, text) => `<div class="section-head"><h2>${titl
 
 function shell(page, lang, body) {
   const nav = [ ['home','index.html'], ['resume','resume.html'], ['portfolio','portfolio.html'], ['notes','notes.html'] ];
-  return `<div class="app-shell"><a class="skip-link" href="#main-content">${lang==='ko'?'본문으로 건너뛰기':'Skip to content'}</a><div class="mobile-scrim" id="scrim"></div><aside class="sidebar" id="sidebar" aria-label="Profile and navigation"><div><a href="./index.html" style="text-decoration:none" aria-label="Park Jinsu home"><div class="brand-mark">PJ</div></a><p class="brand-overline">@1jsjs / PORTFOLIO</p><h2 class="brand-name">${lang==='ko'?'박진수':'Jinsu Park'}</h2><p class="brand-role">AI Engineering · Product Development</p><nav class="side-nav" aria-label="Main navigation">${nav.map(([key,href])=>a('./'+href,escapeHTML(tr(labels[key],lang)),page===key?'aria-current="page"':'')).join('')}</nav></div><div class="signal-art" aria-hidden="true"><span class="orbit"></span><span class="orbit"></span><span class="orbit"></span><span class="dot one"></span><span class="dot two"></span></div><div class="side-footer"><div class="side-links">${a('https://github.com/1jsjs','GITHUB')}${a('./resume.html','RÉSUMÉ')}</div><small>LOCAL PORTFOLIO · 2026</small></div><button class="cover-hint" id="coverHint" type="button" aria-label="${lang==='ko'?'사이트 내용 보기':'View site content'}"><span class="cover-hint-arrow" aria-hidden="true">←</span><span>${lang==='ko'?'스크롤해 살펴보기':'SCROLL TO EXPLORE'}</span></button><span class="cover-corner" aria-hidden="true">PJ</span></aside><main class="main" id="main-content" tabindex="-1"><div class="topbar"><button class="icon-btn mobile-menu" id="menuBtn" aria-label="${page==='home'?(lang==='ko'?'표지 펼치기':'Open cover'):(lang==='ko'?'메뉴 열기':'Open menu')}" aria-expanded="false">☰</button><div class="breadcrumb">JINSU PARK / <strong>${escapeHTML(tr(labels[page],lang))}</strong></div><div class="top-actions"><button class="icon-btn" id="searchBtn" aria-label="${tr(labels.search,lang)}" title="${tr(labels.search,lang)}">⌕</button><button class="icon-btn" id="themeBtn" aria-label="${tr(labels.theme,lang)}" title="${tr(labels.theme,lang)}">◐</button><button class="text-btn" id="langBtn" aria-label="${tr(labels.language,lang)}" title="${tr(labels.language,lang)}">${lang==='ko'?'EN':'KO'}</button></div></div><div class="content">${body}<footer class="site-footer"><span>© 2026 Jinsu Park</span><span>${lang==='ko'?'확인된 경력 자료를 바탕으로 작성':'Built from verified career records'}</span></footer></div></main><div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="${tr(labels.search,lang)}"><div class="search-panel"><div class="search-row"><input id="searchInput" type="search" placeholder="${lang==='ko'?'프로젝트·기술·성과 검색':'Search projects, skills, and outcomes'}" aria-label="${tr(labels.search,lang)}"><button class="icon-btn" id="searchClose" aria-label="${tr(labels.close,lang)}">✕</button></div><div class="search-results" id="searchResults"></div></div></div></div>`;
+  return `<div class="app-shell"><a class="skip-link" href="#main-content">${lang==='ko'?'본문으로 건너뛰기':'Skip to content'}</a><div class="mobile-scrim" id="scrim"></div><aside class="sidebar" id="sidebar" aria-label="Profile and navigation"><div><a href="./index.html" style="text-decoration:none" aria-label="Park Jinsu home"><div class="brand-mark">PJ</div></a><p class="brand-overline">@1jsjs / PORTFOLIO</p><h2 class="brand-name">${lang==='ko'?'박진수':'Jinsu Park'}</h2><p class="brand-role">AI Engineering · Product Development</p><nav class="side-nav" aria-label="Main navigation">${nav.map(([key,href])=>a('./'+href,escapeHTML(tr(labels[key],lang)),page===key?'aria-current="page"':'')).join('')}</nav></div><div class="signal-art" aria-hidden="true"><span class="orbit"></span><span class="orbit"></span><span class="orbit"></span><span class="dot one"></span><span class="dot two"></span></div><div class="side-footer"><div class="side-links">${a('https://github.com/1jsjs','GITHUB')}${a('./resume.html','RÉSUMÉ')}</div><small>LOCAL PORTFOLIO · 2026</small></div><button class="cover-hint" id="coverHint" type="button" aria-label="${lang==='ko'?'사이트 내용 보기':'View site content'}"><span class="cover-hint-arrow" aria-hidden="true">←</span><span>${lang==='ko'?'스크롤해 살펴보기':'SCROLL TO EXPLORE'}</span></button></aside><main class="main" id="main-content" tabindex="-1"><div class="topbar"><button class="icon-btn mobile-menu" id="menuBtn" aria-label="${page==='home'?(lang==='ko'?'표지 펼치기':'Open cover'):(lang==='ko'?'메뉴 열기':'Open menu')}" aria-expanded="false">☰</button><div class="breadcrumb">JINSU PARK / <strong>${escapeHTML(tr(labels[page],lang))}</strong></div><div class="top-actions"><button class="icon-btn" id="searchBtn" aria-label="${tr(labels.search,lang)}" title="${tr(labels.search,lang)}">⌕</button><button class="icon-btn" id="themeBtn" aria-label="${tr(labels.theme,lang)}" title="${tr(labels.theme,lang)}">◐</button><button class="text-btn" id="langBtn" aria-label="${tr(labels.language,lang)}" title="${tr(labels.language,lang)}">${lang==='ko'?'EN':'KO'}</button></div></div><div class="content">${body}<footer class="site-footer"><span>© 2026 Jinsu Park</span><span>${lang==='ko'?'확인된 경력 자료를 바탕으로 작성':'Built from verified career records'}</span></footer></div></main><div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="${tr(labels.search,lang)}"><div class="search-panel"><div class="search-row"><input id="searchInput" type="search" placeholder="${lang==='ko'?'프로젝트·기술·성과 검색':'Search projects, skills, and outcomes'}" aria-label="${tr(labels.search,lang)}"><button class="icon-btn" id="searchClose" aria-label="${tr(labels.close,lang)}">✕</button></div><div class="search-results" id="searchResults"></div></div></div></div>`;
 }
 
 function home(lang) {
@@ -172,6 +207,12 @@ function bindCoverDrag(sidebar) {
 
 function bind(lang) {
   const sidebar=document.getElementById('sidebar'), scrim=document.getElementById('scrim'), menu=document.getElementById('menuBtn');
+  const contactLauncher=document.getElementById('contactLauncher');
+  if (CHANNEL_TALK_PLUGIN_KEY) contactLauncher.addEventListener('click',event=>{
+    event.preventDefault();
+    contactLauncher.setAttribute('aria-busy','true');
+    showChannelTalk().catch(()=>{window.location.href=contactLauncher.href}).finally(()=>contactLauncher.removeAttribute('aria-busy'));
+  });
   document.getElementById('coverHint').addEventListener('click',closeCover);
   document.querySelector('.skip-link').addEventListener('click', () => { closeCover(); document.getElementById('main-content').focus(); });
   if (document.body.dataset.page === 'home') bindCoverDrag(sidebar);
@@ -202,6 +243,14 @@ function render() {
   document.documentElement.lang=lang;
   document.body.classList.toggle('dark',localStorage.getItem('pj-theme')==='dark');
   document.getElementById('app').innerHTML=shell(page,lang,({home,resume,portfolio,notes}[page]||home)(lang));
+  const launcher=document.createElement('a');
+  launcher.id='contactLauncher';
+  launcher.className='contact-launcher';
+  launcher.href=`mailto:${CONTACT_EMAIL}`;
+  launcher.textContent='PJ';
+  launcher.setAttribute('aria-label',CHANNEL_TALK_PLUGIN_KEY?(lang==='ko'?'채팅으로 문의하기':'Open chat'):(lang==='ko'?'이메일로 문의하기':'Contact by email'));
+  launcher.title=launcher.getAttribute('aria-label');
+  document.getElementById('app').append(launcher);
   const coverActive=page==='home'&&(coverState ?? true);
   document.body.classList.toggle('cover-open',coverActive);
   document.querySelector('main').inert=coverActive;

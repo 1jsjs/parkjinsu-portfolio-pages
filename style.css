@@ -92,7 +92,7 @@ body[data-page=home] .mobile-menu{display:inline-flex}
 .side-footer{align-items:center;margin-top:28px;gap:13px}
 .side-links{justify-content:center}.side-links a{color:#eff7f6;background:rgba(0,0,0,.14);border-color:rgba(255,255,255,.48)}
 .side-footer small{font-size:10px;color:#bbc9ce}
-.cover-hint,.cover-corner{display:none}
+.cover-hint{display:none}
 .cover-open{overflow:hidden}
 .cover-open .sidebar{width:100vw;max-width:none;z-index:30;transform:none}
 .cover-open .sidebar::before{background:linear-gradient(180deg,rgba(4,17,27,.43),rgba(4,17,27,.61)),url('./assets/hero-platform.jpg') center center/cover no-repeat}
@@ -103,18 +103,18 @@ body[data-page=home] .mobile-menu{display:inline-flex}
 .cover-open .side-footer small{display:none}
 .cover-open .cover-hint{position:absolute;right:clamp(26px,6vw,115px);top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:10px;background:none;border:0;color:white;text-align:left;font:600 12px/1.4 "Pretendard Variable",system-ui,sans-serif;letter-spacing:.05em}
 .cover-hint-arrow{font:300 54px/1 "Pretendard Variable",system-ui,sans-serif}
-.cover-open .cover-corner{display:grid;place-items:center;position:absolute;right:28px;bottom:25px;width:45px;height:45px;border-radius:50%;background:#730629;color:#fff;font:700 18px/1 "Pretendard Variable",system-ui,sans-serif;letter-spacing:-.12em;padding-right:.12em}
-@media(max-width:800px){.sidebar{width:min(310px,87vw);transform:translateX(-102%)}.sidebar.open{transform:translateX(0)}.cover-open .sidebar{width:100vw;height:100dvh;padding:24px 15px;transform:none}.cover-open .brand-mark{width:88px;height:88px;font-size:34px}.cover-open .cover-hint{top:auto;right:50%;bottom:55px;transform:translateX(50%);font-size:11px;white-space:nowrap}.cover-open .cover-hint-arrow{font-size:35px;transform:rotate(-90deg)}.cover-open .cover-corner{right:18px;bottom:15px;width:38px;height:38px;font-size:15px}}
+.contact-launcher{display:grid;place-items:center;position:fixed;right:28px;bottom:25px;z-index:40;width:48px;height:48px;border:1px solid rgba(255,255,255,.35);border-radius:50%;background:#730629;color:#fff;text-decoration:none;font:700 18px/1 "Pretendard Variable",system-ui,sans-serif;letter-spacing:-.12em;padding-right:.12em;box-shadow:0 10px 30px rgba(0,0,0,.24);transition:background-color .2s ease,transform .2s ease}.contact-launcher:hover,.contact-launcher:focus-visible{background:#5d0521;color:#fff}.contact-launcher:active{transform:scale(.96)}
+@media(max-width:800px){.sidebar{width:min(310px,87vw);transform:translateX(-102%)}.sidebar.open{transform:translateX(0)}.cover-open .sidebar{width:100vw;height:100dvh;padding:24px 15px;transform:none}.cover-open .brand-mark{width:88px;height:88px;font-size:34px}.cover-open .cover-hint{top:auto;right:50%;bottom:55px;transform:translateX(50%);font-size:11px;white-space:nowrap}.cover-open .cover-hint-arrow{font-size:35px;transform:rotate(-90deg)}.contact-launcher{right:18px;bottom:15px;width:46px;height:46px;font-size:16px}}
 @media(max-height:630px){.cover-open .brand-mark{width:76px;height:76px;font-size:30px}.cover-open .brand-overline{margin-top:12px}.cover-open .side-nav{margin-top:13px}.cover-open .side-footer{margin-top:13px}.cover-open .cover-hint{bottom:16px;top:auto;transform:none}}
 @media(prefers-reduced-motion:reduce){.sidebar{transition:none}}
-@media print{.cover-open{overflow:visible}.cover-hint,.cover-corner{display:none!important}}
+@media print{.cover-open{overflow:visible}.cover-hint,.contact-launcher{display:none!important}}
 
 /* Korean display text uses SUIT; Latin letters and numerals fall back to Pretendard. */
 h1,h2,h3,.quick-link strong,.fact strong{font-family:"SUIT Hangul","Pretendard Variable",system-ui,sans-serif}
 h1{letter-spacing:-.04em}
 h2,.brand-name{letter-spacing:-.03em}
 h3{letter-spacing:-.02em}
-.brand-mark,.cover-hint-arrow,.cover-open .cover-corner{font-family:"Pretendard Variable",system-ui,sans-serif}
+.brand-mark,.cover-hint-arrow,.contact-launcher{font-family:"Pretendard Variable",system-ui,sans-serif}
 .brand-overline,.side-links a,.side-footer small,.breadcrumb,.text-btn,.page-kicker,.quick-link span:first-child,.timeline-item time,.feature .meta,.project .meta,.entry .meta,.chip,.resume-item .period,.entry .category,.cover-open .cover-hint{font-family:"Pretendard Variable",system-ui,sans-serif}
 .page-kicker,.timeline-item time,.feature .meta,.project .meta,.entry .meta,.resume-item .period,.chip{font-variant-numeric:tabular-nums}
 
